@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request
-import re
+import spacy
 
 app = Flask(__name__)
+nlp = spacy.load("en_core_web_sm")
 
 STOP_WORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
@@ -10,13 +11,25 @@ STOP_WORDS = {
     "someone", "looking"
 }
 
-def clean_text(text: str):
-    words = re.findall(r"\b[a-zA-Z]+\b", text.lower())
-    return {word for word in words if word not in STOP_WORDS and len(word) > 2}
+def extract_keywords(text: str):
+    doc = nlp(text.lower())
+    keywords = set()
+
+    for token in doc:
+        if (
+            token.is_alpha
+            and not token.is_stop
+            and token.text not in STOP_WORDS
+            and len(token.text) > 2
+            and token.pos_ in {"NOUN", "PROPN", "ADJ"}
+        ):
+            keywords.add(token.lemma_)
+
+    return keywords
 
 def analyze_match(resume_text: str, job_text: str):
-    resume_words = clean_text(resume_text)
-    job_words = clean_text(job_text)
+    resume_words = extract_keywords(resume_text)
+    job_words = extract_keywords(job_text)
 
     common_words = resume_words.intersection(job_words)
     missing_words = job_words.difference(resume_words)
