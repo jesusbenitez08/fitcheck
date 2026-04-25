@@ -4,27 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FitCheck</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>FitCheck</h1>
-    <p>Compare a resume with a job description</p>
+    <div class="container">
+        <h1>FitCheck</h1>
+        <p class="subtitle">Compare a resume with a job description and get a quick match overview.</p>
 
-    <form action="/analyze" method="POST">
-        <div>
-            <label for="resume_text"><strong>Paste Resume Text</strong></label><br>
-            <textarea id="resume_text" name="resume_text" rows="10" cols="70" placeholder="Paste resume text here..." required></textarea>
-        </div>
+        <form action="/analyze" method="POST">
+            <div class="form-group">
+                <label for="resume_text">Paste Resume Text</label>
+                <textarea id="resume_text" name="resume_text" placeholder="Paste resume text here..." required></textarea>
+            </div>
 
-        <br>
+            <div class="form-group">
+                <label for="job_text">Paste Job Description</label>
+                <textarea id="job_text" name="job_text" placeholder="Paste job description here..." required></textarea>
+            </div>
 
-        <div>
-            <label for="job_text"><strong>Paste Job Description</strong></label><br>
-            <textarea id="job_text" name="job_text" rows="10" cols="70" placeholder="Paste job description here..." required></textarea>
-        </div>
-
-        <br>
-
-        <button type="submit">Analyze Resume</button>
-    </form>
+            <button type="submit">Analyze Resume</button>
+        </form>
+    </div>
 </body>
 </html>

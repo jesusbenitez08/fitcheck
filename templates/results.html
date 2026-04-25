@@ -4,46 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FitCheck Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>FitCheck Results</h1>
+    <div class="container">
+        <h1>FitCheck Results</h1>
 
-    <h2>Match Score: {{ match_score }}%</h2>
+        <div class="score-card">
+            <h2>Match Score: {{ match_score }}%</h2>
+        </div>
 
-    <h3>Matched Skills / Keywords</h3>
-    {% if matched_skills %}
-        <ul>
-            {% for skill in matched_skills %}
-                <li>{{ skill }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No matched keywords found.</p>
-    {% endif %}
+        <div class="results-grid">
+            <div class="card">
+                <h3>Matched Skills / Keywords</h3>
+                {% if matched_skills %}
+                    <ul>
+                        {% for skill in matched_skills %}
+                            <li>{{ skill }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No matched keywords found.</p>
+                {% endif %}
+            </div>
 
-    <h3>Missing Skills / Keywords</h3>
-    {% if missing_skills %}
-        <ul>
-            {% for skill in missing_skills %}
-                <li>{{ skill }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No missing keywords found.</p>
-    {% endif %}
+            <div class="card">
+                <h3>Missing Skills / Keywords</h3>
+                {% if missing_skills %}
+                    <ul>
+                        {% for skill in missing_skills %}
+                            <li>{{ skill }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No missing keywords found.</p>
+                {% endif %}
+            </div>
+        </div>
 
-    <h3>Suggestions</h3>
-    {% if suggestions %}
-    <ul>
-        {% for suggestion in suggestions %}
-            <li>{{ suggestion }}</li>
-        {% endfor %}
-    </ul>
-        {% else %}
-    <p>No suggestions needed.</p>
-        {% endif %}
+        <div class="card suggestions">
+            <h3>Suggestions</h3>
+            {% if suggestions %}
+                <ul>
+                    {% for suggestion in suggestions %}
+                        <li>{{ suggestion }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No suggestions needed.</p>
+            {% endif %}
+        </div>
 
-    <br>
-    <a href="/">Analyze Another Resume</a>
+        <a class="button-link" href="/">Analyze Another Resume</a>
+    </div>
 </body>
 </html>

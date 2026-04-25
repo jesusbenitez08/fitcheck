@@ -1,0 +1,99 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    margin: 0;
+    padding: 40px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 32px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #475569;
+    margin-bottom: 28px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+button, .button-link {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+button:hover, .button-link:hover {
+    background-color: #1d4ed8;
+}
+
+.score-card {
+    background-color: #eff6ff;
+    border-left: 6px solid #2563eb;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    background-color: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+
+.card ul {
+    padding-left: 20px;
+}
+
+.suggestions {
+    background-color: #fff7ed;
+    border: 1px solid #fed7aa;
+}
+
+@media (max-width: 700px) {
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+}
