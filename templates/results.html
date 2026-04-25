@@ -32,6 +32,17 @@
         <p>No missing keywords found.</p>
     {% endif %}
 
+    <h3>Suggestions</h3>
+    {% if suggestions %}
+    <ul>
+        {% for suggestion in suggestions %}
+            <li>{{ suggestion }}</li>
+        {% endfor %}
+    </ul>
+        {% else %}
+    <p>No suggestions needed.</p>
+        {% endif %}
+
     <br>
     <a href="/">Analyze Another Resume</a>
 </body>

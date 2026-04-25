@@ -43,10 +43,15 @@ def analyze_match(resume_text: str, job_text: str):
     else:
         match_score = int((len(common_words) / len(job_words)) * 100)
 
+    suggestions = [
+    f"Consider adding experience or examples related to {word}."
+    for word in sorted(list(missing_words))[:5]
+]
     return {
         "match_score": match_score,
         "matched_skills": sorted(list(common_words))[:10],
-        "missing_skills": sorted(list(missing_words))[:10]
+        "missing_skills": sorted(list(missing_words))[:10],
+        "suggestions": suggestions 
     }
 
 @app.route('/')
@@ -64,7 +69,8 @@ def analyze():
         'results.html',
         match_score=results["match_score"],
         matched_skills=results["matched_skills"],
-        missing_skills=results["missing_skills"]
+        missing_skills=results["missing_skills"],
+        suggestions=results["suggestions"]
     )
 
 if __name__ == '__main__':
