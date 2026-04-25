@@ -8,7 +8,9 @@ STOP_WORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
     "in", "is", "it", "of", "on", "or", "that", "the", "to", "we",
     "with", "you", "your", "our", "will", "this", "they", "their",
-    "someone", "looking"
+    "someone", "looking", "data", "skill", "skills", "role", "candidate",
+    "experience", "work", "job", "description", "looking", "required", 
+    "requirement", "requirements"
 }
 
 def extract_keywords(text: str):
@@ -23,7 +25,9 @@ def extract_keywords(text: str):
             and len(token.text) > 2
             and token.pos_ in {"NOUN", "PROPN", "ADJ"}
         ):
-            keywords.add(token.lemma_)
+            keyword = token.lemma_.strip()
+            if keyword not in STOP_WORDS and len(keyword) > 2:
+                keywords.add(keyword)
 
     return keywords
 
