@@ -97,3 +97,18 @@ button:hover, .button-link:hover {
         grid-template-columns: 1fr;
     }
 }
+
+.good {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.medium {
+    color: #ca8a04;
+    font-weight: bold;
+}
+
+.bad {
+    color: #dc2626;
+    font-weight: bold;
+}

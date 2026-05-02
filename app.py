@@ -44,7 +44,7 @@ def analyze_match(resume_text: str, job_text: str):
         match_score = int((len(common_words) / len(job_words)) * 100)
 
     suggestions = [
-    f"Consider adding experience or examples related to {word}."
+    f"Add experience related to {word} to improve your match."
     for word in sorted(list(missing_words))[:5]
 ]
     return {

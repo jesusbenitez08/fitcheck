@@ -11,7 +11,12 @@
         <h1>FitCheck Results</h1>
 
         <div class="score-card">
-            <h2>Match Score: {{ match_score }}%</h2>
+     <h2>
+    Match Score:
+    <span class="{% if match_score >= 70 %}good{% elif match_score >= 40 %}medium{% else %}bad{% endif %}">
+        {{ match_score }}%
+    </span>
+    </h2>
         </div>
 
         <div class="results-grid">
