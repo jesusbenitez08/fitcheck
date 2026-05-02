@@ -43,20 +43,30 @@ def analyze_match(resume_text: str, job_text: str):
     else:
         match_score = int((len(common_words) / len(job_words)) * 100)
 
+    if match_score >= 70:
+        match_label = "Strong Match"
+    elif match_score >= 40:
+        match_label = "Moderate Match"
+    else:
+        match_label = "Low Match"
+
     suggestions = [
-    f"Add experience related to {word} to improve your match."
-    for word in sorted(list(missing_words))[:5]
-]
+        f"Add experience related to {word} to improve your match."
+        for word in sorted(list(missing_words))[:5]
+    ]
+
     return {
         "match_score": match_score,
+        "match_label": match_label,
         "matched_skills": sorted(list(common_words))[:10],
         "missing_skills": sorted(list(missing_words))[:10],
-        "suggestions": suggestions 
+        "suggestions": suggestions
     }
 
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -68,6 +78,7 @@ def analyze():
     return render_template(
         'results.html',
         match_score=results["match_score"],
+        match_label=results["match_label"],
         matched_skills=results["matched_skills"],
         missing_skills=results["missing_skills"],
         suggestions=results["suggestions"]
