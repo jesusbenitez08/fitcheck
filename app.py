@@ -77,6 +77,17 @@ def analyze():
     resume_text = request.form.get('resume_text', '')
     job_text = request.form.get('job_text', '')
 
+    if len(resume_text.strip()) < 10 or len(job_text.strip()) < 10:
+        return render_template(
+        'results.html',
+        match_score=0,
+        match_label="Not Enough Information",
+        match_explanation="Please enter a longer resume and job description so FitCheck can analyze the match properly.",
+        matched_skills=[],
+        missing_skills=[],
+        suggestions=["Add more resume and job description text before analyzing."]
+        )
+
     results = analyze_match(resume_text, job_text)
 
     return render_template(
