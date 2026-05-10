@@ -117,3 +117,9 @@ button:hover, .button-link:hover {
     margin-top: 6px;
     font-weight: bold;
 }
+
+.match-explanation {
+    margin-top: 10px;
+    color: #475569;
+    max-width: 720px;
+}

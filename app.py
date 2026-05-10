@@ -45,10 +45,13 @@ def analyze_match(resume_text: str, job_text: str):
 
     if match_score >= 70:
         match_label = "Strong Match"
+        match_explanation = "This resume is a strong match because most of the important keywords from the job description were found."
     elif match_score >= 40:
         match_label = "Moderate Match"
+        match_explanation = "This resume has some overlap with the job description, but there are still important skills missing."
     else:
         match_label = "Low Match"
+        match_explanation = "This resume has limited overlap with the job description and may need more targeted skills or experience."
 
     suggestions = [
         f"Add experience related to {word} to improve your match."
@@ -60,6 +63,7 @@ def analyze_match(resume_text: str, job_text: str):
         "match_label": match_label,
         "matched_skills": sorted(list(common_words))[:10],
         "missing_skills": sorted(list(missing_words))[:10],
+        "match_explanation": match_explanation,
         "suggestions": suggestions
     }
 
@@ -81,7 +85,8 @@ def analyze():
         match_label=results["match_label"],
         matched_skills=results["matched_skills"],
         missing_skills=results["missing_skills"],
-        suggestions=results["suggestions"]
+        suggestions=results["suggestions"],
+        match_explanation=results["match_explanation"],
     )
 
 if __name__ == '__main__':
