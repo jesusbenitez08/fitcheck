@@ -30,11 +30,11 @@
             <div class="card">
                 <h3>Matched Skills / Keywords</h3>
                 {% if matched_skills %}
-                    <ul>
+                    <div class="skills">
                         {% for skill in matched_skills %}
-                            <li>{{ skill }}</li>
+                            <span class="badge good">{{ skill }}</span>
                         {% endfor %}
-                    </ul>
+                    </div>
                 {% else %}
                     <p>No matched keywords found.</p>
                 {% endif %}
@@ -43,11 +43,11 @@
             <div class="card">
                 <h3>Missing Skills / Keywords</h3>
                 {% if missing_skills %}
-                    <ul>
+                    <div class="skills">
                         {% for skill in missing_skills %}
-                            <li>{{ skill }}</li>
+                            <span class="badge bad">{{ skill }}</span>
                         {% endfor %}
-                    </ul>
+                    </div>
                 {% else %}
                     <p>No missing keywords found.</p>
                 {% endif %}

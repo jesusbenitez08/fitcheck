@@ -46,15 +46,18 @@ textarea {
 }
 
 button, .button-link {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
     background-color: #2563eb;
     color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
     text-decoration: none;
-    display: inline-block;
+    transition: background 0.2s ease;
+}
+
+.button-link:hover {
+    background-color: #1d4ed8;
 }
 
 button:hover, .button-link:hover {
@@ -122,4 +125,47 @@ button:hover, .button-link:hover {
     margin-top: 10px;
     color: #475569;
     max-width: 720px;
+}
+
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.badge.good {
+    background-color: #d1f5d3;
+    color: #1a7f37;
+}
+
+.badge.bad {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px;
+}
+
+.score-card {
+    margin-bottom: 20px;
 }
