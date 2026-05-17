@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import spacy
+from PyPDF2 import PdfReader
 
 app = Flask(__name__)
 nlp = spacy.load("en_core_web_sm")
@@ -30,6 +31,20 @@ def extract_keywords(text: str):
                 keywords.add(keyword)
 
     return keywords
+
+def extract_text_from_pdf(file):
+    try:
+        reader = PdfReader(file)
+        text = ""
+
+        for page in reader.pages:
+            extracted = page.extract_text()
+            if extracted:
+                text += extracted + " "
+
+        return text.strip()
+    except Exception:
+        return ""
 
 def analyze_match(resume_text: str, job_text: str):
     resume_words = extract_keywords(resume_text)
@@ -76,6 +91,12 @@ def home():
 def analyze():
     resume_text = request.form.get('resume_text', '')
     job_text = request.form.get('job_text', '')
+
+    uploaded_file = request.files.get('resume_file')
+
+    #if a file is uploaded, use it instead of text
+    if uploaded_file and uploaded_file.filename.lower().endswith('.pdf'):
+        resume_text = extract_text_from_pdf(uploaded_file)
 
     if len(resume_text.strip()) < 10 or len(job_text.strip()) < 10:
         return render_template(

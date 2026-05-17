@@ -11,10 +11,21 @@
         <h1>FitCheck</h1>
         <p class="subtitle">Compare a resume with a job description and get a quick match overview.</p>
 
-        <form action="/analyze" method="POST">
+
+        <form action="/analyze" method="POST" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label for="resume_file">Upload Resume (PDF)</label>
+                <input type="file" id="resume_file" name="resume_file" accept=".pdf">
+            </div>
+
+            <p style="font-size: 14px; color: #64748b;">
+                You can paste your resume text or upload a PDF.
+            </p>
+
             <div class="form-group">
                 <label for="resume_text">Paste Resume Text</label>
-                <textarea id="resume_text" name="resume_text" placeholder="Paste resume text here..." required></textarea>
+                <textarea id="resume_text" name="resume_text" placeholder="Paste resume text here..."></textarea>
             </div>
 
             <div class="form-group">
@@ -23,6 +34,7 @@
             </div>
 
             <button type="submit">Analyze Resume</button>
+
         </form>
     </div>
 </body>
