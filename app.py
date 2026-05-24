@@ -11,12 +11,32 @@ STOP_WORDS = {
     "with", "you", "your", "our", "will", "this", "they", "their",
     "someone", "looking", "data", "skill", "skills", "role", "candidate",
     "experience", "work", "job", "description", "looking", "required", 
-    "requirement", "requirements"
+    "requirement", "requirements", "company", "day", "team", "role", 
+    "responsibility", "business", "client", "work", "environment",
+    "company", "day", "business", "client", "account", "active", "administer",
+    "cert", "certification", "change", "clean", "clear", "base", "diverse",
+    "fundamental", "issue", "management", "opportunity", "platform",
+    "responsibilities", "responsibility", "professional", "support",
+    "service", "services", "process", "processes", "system", "systems"
+}
+
+KNOWN_SKILLS = {
+    "python", "sql", "flask", "javascript", "github", "git", "vscode",
+    "machine learning", "nlp", "data analysis", "visualization",
+    "windows", "microsoft", "microsoft 365", "active directory",
+    "entra", "dns", "dhcp", "vpn", "firewall", "networking",
+    "powershell", "comptia", "security", "helpdesk", "ticketing",
+    "documentation", "communication", "teamwork"
 }
 
 def extract_keywords(text: str):
-    doc = nlp(text.lower())
+    text_lower = text.lower()
+    doc = nlp(text_lower)
     keywords = set()
+
+    for skill in KNOWN_SKILLS:
+        if skill in text_lower:
+            keywords.add(skill)
 
     for token in doc:
         if (
@@ -24,10 +44,10 @@ def extract_keywords(text: str):
             and not token.is_stop
             and token.text not in STOP_WORDS
             and len(token.text) > 2
-            and token.pos_ in {"NOUN", "PROPN", "ADJ"}
+            and token.pos_ in {"NOUN", "PROPN"}
         ):
             keyword = token.lemma_.strip()
-            if keyword not in STOP_WORDS and len(keyword) > 2:
+            if keyword in KNOWN_SKILLS:
                 keywords.add(keyword)
 
     return keywords
