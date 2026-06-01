@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import spacy
 from PyPDF2 import PdfReader
+from docx import Document
 
 app = Flask(__name__)
 nlp = spacy.load("en_core_web_sm")
@@ -21,12 +22,13 @@ STOP_WORDS = {
 }
 
 KNOWN_SKILLS = {
-    "python", "sql", "flask", "javascript", "github", "git", "vscode",
-    "machine learning", "nlp", "data analysis", "visualization",
-    "windows", "microsoft", "microsoft 365", "active directory",
-    "entra", "dns", "dhcp", "vpn", "firewall", "networking",
-    "powershell", "comptia", "security", "helpdesk", "ticketing",
-    "documentation", "communication", "teamwork"
+    "python", "sql", "flask", "javascript", "github", "git", "vs code",
+    "machine learning", "nlp", "computer vision", "data analysis",
+    "data cleaning", "visualization", "statistical modeling",
+    "windows", "microsoft 365", "active directory", "entra id",
+    "dns", "dhcp", "vpn", "firewall", "networking", "powershell",
+    "comptia", "security", "helpdesk", "ticketing", "documentation",
+    "communication", "teamwork", "project management", "deployment"
 }
 
 def extract_keywords(text: str):
@@ -47,7 +49,7 @@ def extract_keywords(text: str):
             and token.pos_ in {"NOUN", "PROPN"}
         ):
             keyword = token.lemma_.strip()
-            if keyword in KNOWN_SKILLS:
+            if keyword not in STOP_WORDS and len(keyword) > 2:
                 keywords.add(keyword)
 
     return keywords
@@ -66,6 +68,35 @@ def extract_text_from_pdf(file):
     except Exception:
         return ""
 
+def extract_text_from_docx(file):
+    try:
+        document = Document(file)
+        text = ""
+
+        for paragraph in document.paragraphs:
+            if paragraph.text:
+                text += paragraph.text + " "
+
+        return text.strip()
+    except Exception:
+        return "" 
+    
+#test test test
+def calculate_match_score(common_words, job_words):
+    if not job_words:
+        return 0
+
+    base_score = int((len(common_words) / len(job_words)) * 100)
+
+    known_skill_matches = common_words.intersection(KNOWN_SKILLS)
+
+    bonus_score = len(known_skill_matches) * 6
+
+    final_score = base_score + bonus_score
+
+    return min(final_score, 100)
+
+
 def analyze_match(resume_text: str, job_text: str):
     resume_words = extract_keywords(resume_text)
     job_words = extract_keywords(job_text)
@@ -73,10 +104,7 @@ def analyze_match(resume_text: str, job_text: str):
     common_words = resume_words.intersection(job_words)
     missing_words = job_words.difference(resume_words)
 
-    if len(job_words) == 0:
-        match_score = 0
-    else:
-        match_score = int((len(common_words) / len(job_words)) * 100)
+    match_score = calculate_match_score(common_words, job_words)
 
     if match_score >= 70:
         match_label = "Strong Match"
@@ -114,9 +142,15 @@ def analyze():
 
     uploaded_file = request.files.get('resume_file')
 
-    #if a file is uploaded, use it instead of text
-    if uploaded_file and uploaded_file.filename.lower().endswith('.pdf'):
-        resume_text = extract_text_from_pdf(uploaded_file)
+    # if a file is uploaded, use it instead of text
+    if uploaded_file:
+        filename = uploaded_file.filename.lower()
+
+        if filename.endswith('.pdf'):
+            resume_text = extract_text_from_pdf(uploaded_file)
+
+        elif filename.endswith('.docx'):
+            resume_text = extract_text_from_docx(uploaded_file)
 
     if len(resume_text.strip()) < 10 or len(job_text.strip()) < 10:
         return render_template(
