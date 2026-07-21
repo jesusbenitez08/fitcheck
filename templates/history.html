@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCheck History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis History</h1>
+
+        {% if history_results %}
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Resume</th>
+                        <th>Match</th>
+                        <th>Keyword</th>
+                        <th>Semantic AI</th>
+                        <th>Label</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in history_results %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}%</td>
+                        <td>{{ row[2] }}%</td>
+                        <td>{{ row[3] }}%</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No analysis history yet.</p>
+        {% endif %}
+
+            <a class="button-link" href="/export">
+                Export Results to CSV
+            </a>
+        <a class="button-link" href="/">Back to Analyzer</a>
+    </div>
+</body>
+</html>

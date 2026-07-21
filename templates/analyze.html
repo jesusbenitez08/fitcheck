@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analyze Resume | FitCheck AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="app-page">
+
+    <nav class="navbar">
+
+        <a href="/" class="brand">
+            <span class="brand-icon">F</span>
+
+            <span>
+                FitCheck
+                <strong>AI</strong>
+            </span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/history">History</a>
+
+            <a href="/analyzer" class="nav-button">
+                Analyze Resume
+            </a>
+        </div>
+
+    </nav>
+
+
+    <main class="analyzer-main">
+
+        <div class="analyzer-heading">
+
+            <div class="hero-badge">
+                ✦ AI Resume Analysis
+            </div>
+
+            <h1>
+                How well does your resume fit?
+            </h1>
+
+            <p>
+                Upload your resume and paste a job description.
+                FitCheck will analyze the semantic relationship
+                between your experience and the position.
+            </p>
+
+        </div>
+
+
+        <form
+            id="analysis-form"
+            action="/analyze"
+            method="POST"
+            enctype="multipart/form-data"
+            class="analysis-form"
+        >
+
+            <div id="form-message" class="form-message" role="alert"></div>
+
+            <section class="input-panel">
+
+                <div class="panel-heading">
+
+                    <span class="panel-number">1</span>
+
+                    <div>
+                        <h2>Your Resume</h2>
+
+                        <p>
+                            Upload a file or paste your resume text.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <label for="resume_file" class="upload-zone" id="upload-zone">
+                    <span class="upload-icon">↑</span>
+
+                    <strong id="file-title">
+                        Upload your resume
+                    </strong>
+
+                    <span id="file-status">
+                        Click to browse your files
+                    </span>
+
+                    <small>
+                        PDF or DOCX
+                    </small>
+                </label>
+
+                <input
+                    type="file"
+                    id="resume_file"
+                    name="resume_file"
+                    accept=".pdf,.docx"
+                    class="hidden-file-input"
+                >
+
+
+                <div class="divider">
+                    <span>OR PASTE YOUR RESUME</span>
+                </div>
+
+
+                <textarea
+                    id="resume_text"
+                    name="resume_text"
+                    placeholder="Paste your resume text here..."
+                ></textarea>
+
+            </section>
+
+
+            <section class="input-panel">
+
+                <div class="panel-heading">
+
+                    <span class="panel-number">2</span>
+
+                    <div>
+                        <h2>Target Job</h2>
+
+                        <p>
+                            Paste the full job description.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <textarea
+                    id="job_text"
+                    name="job_text"
+                    placeholder="Paste the complete job description here..."
+                    required
+                ></textarea>
+
+            </section>
+
+
+            <div class="form-actions">
+                <button
+                    type="button"
+                    id="clear-form"
+                    class="clear-button"
+                >
+                    Clear Form
+                </button>
+
+                <button
+                    type="submit"
+                    id="analyze-button"
+                    class="analyze-button"
+                >
+                    <span>✦</span>
+                    <span id="analyze-button-text">Analyze with AI</span>
+                </button>
+            </div>
+
+        </form>
+
+        <div
+            id="loading-overlay"
+            class="loading-overlay"
+            aria-hidden="true"
+        >
+            <div class="loading-panel">
+                <div class="loading-logo">
+                    <span>✓</span>
+                    <i>✦</i>
+                </div>
+
+                <p class="loading-eyebrow">FITCHECK AI</p>
+
+                <h2>Analyzing your resume</h2>
+
+                <p id="loading-message" class="loading-message">
+                    Reading your experience...
+                </p>
+
+                <div class="loading-progress">
+                    <div
+                        id="loading-progress-bar"
+                        class="loading-progress-bar"
+                    ></div>
+                </div>
+
+                <div class="loading-steps">
+                    <span class="loading-step active">
+                        Reading resume
+                    </span>
+
+                    <span class="loading-step">
+                        Comparing meaning
+                    </span>
+
+                    <span class="loading-step">
+                        Ranking insights
+                    </span>
+
+                    <span class="loading-step">
+                        Preparing feedback
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+
+    <script>
+        const form = document.getElementById("analysis-form");
+        const fileInput = document.getElementById("resume_file");
+        const resumeText = document.getElementById("resume_text");
+        const jobText = document.getElementById("job_text");
+
+        const fileTitle = document.getElementById("file-title");
+        const fileStatus = document.getElementById("file-status");
+
+        const formMessage = document.getElementById("form-message");
+        const clearButton = document.getElementById("clear-form");
+        const analyzeButton = document.getElementById("analyze-button");
+        const analyzeButtonText =
+            document.getElementById("analyze-button-text");
+
+        const loadingOverlay =
+            document.getElementById("loading-overlay");
+
+        const loadingMessage =
+            document.getElementById("loading-message");
+
+        const loadingProgressBar =
+            document.getElementById("loading-progress-bar");
+
+        const loadingSteps =
+            document.querySelectorAll(".loading-step");
+
+
+        fileInput.addEventListener("change", () => {
+            if (fileInput.files.length === 0) {
+                resetFileDisplay();
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const allowedExtensions = [".pdf", ".docx"];
+            const fileName = file.name.toLowerCase();
+
+            const isValidFile = allowedExtensions.some(
+                extension => fileName.endsWith(extension)
+            );
+
+            if (!isValidFile) {
+                fileInput.value = "";
+                showMessage(
+                    "Please upload a PDF or DOCX resume."
+                );
+                resetFileDisplay();
+                return;
+            }
+
+            fileTitle.textContent = file.name;
+            fileStatus.textContent =
+                "Resume selected and ready for analysis";
+
+            formMessage.textContent = "";
+            formMessage.classList.remove("visible");
+        });
+
+
+        clearButton.addEventListener("click", () => {
+            form.reset();
+            resetFileDisplay();
+
+            formMessage.textContent = "";
+            formMessage.classList.remove("visible");
+
+            resumeText.focus();
+        });
+
+
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+
+            const hasUploadedResume =
+                fileInput.files.length > 0;
+
+            const hasPastedResume =
+                resumeText.value.trim().length >= 10;
+
+            const hasJobDescription =
+                jobText.value.trim().length >= 10;
+
+            if (!hasUploadedResume && !hasPastedResume) {
+                showMessage(
+                    "Upload a resume or paste your resume text before analyzing."
+                );
+                return;
+            }
+
+            if (!hasJobDescription) {
+                showMessage(
+                    "Paste a complete job description before analyzing."
+                );
+                jobText.focus();
+                return;
+            }
+
+            startLoadingExperience();
+        });
+
+
+        function showMessage(message) {
+            formMessage.textContent = message;
+            formMessage.classList.add("visible");
+
+            formMessage.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+
+
+        function resetFileDisplay() {
+            fileTitle.textContent = "Upload your resume";
+            fileStatus.textContent = "Click to browse your files";
+        }
+
+
+        function startLoadingExperience() {
+            analyzeButton.disabled = true;
+            clearButton.disabled = true;
+
+            analyzeButtonText.textContent = "Analyzing...";
+
+            loadingOverlay.classList.add("visible");
+            loadingOverlay.setAttribute("aria-hidden", "false");
+
+            document.body.classList.add("loading-active");
+
+            const messages = [
+                "Reading your experience...",
+                "Understanding the job requirements...",
+                "Comparing semantic meaning...",
+                "Ranking strengths and growth areas...",
+                "Preparing your AI feedback..."
+            ];
+
+            let currentMessage = 0;
+            let currentStep = 0;
+
+            loadingProgressBar.style.width = "12%";
+
+            const messageInterval = setInterval(() => {
+                currentMessage += 1;
+
+                if (currentMessage < messages.length) {
+                    loadingMessage.textContent =
+                        messages[currentMessage];
+
+                    loadingProgressBar.style.width =
+                        `${20 + currentMessage * 19}%`;
+                }
+            }, 600);
+
+            const stepInterval = setInterval(() => {
+                loadingSteps.forEach((step, index) => {
+                    step.classList.toggle(
+                        "active",
+                        index <= currentStep
+                    );
+                });
+
+                currentStep += 1;
+            }, 700);
+
+            window.setTimeout(() => {
+                clearInterval(messageInterval);
+                clearInterval(stepInterval);
+
+                loadingProgressBar.style.width = "100%";
+                loadingMessage.textContent =
+                    "Your analysis is ready.";
+
+                window.setTimeout(() => {
+                    form.submit();
+                }, 350);
+            }, 3000);
+        }
+    </script>
+
+</body>
+</html>

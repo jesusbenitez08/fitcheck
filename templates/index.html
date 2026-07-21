@@ -3,39 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitCheck</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <title>FitCheck AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <div class="container">
-        <h1>FitCheck</h1>
-        <p class="subtitle">Compare a resume with a job description and get a quick match overview.</p>
+
+<body class="landing-page">
+
+    <nav class="navbar">
+
+        <a href="/" class="brand">
+            <span class="brand-icon">F</span>
+
+            <span>
+                FitCheck
+                <strong>AI</strong>
+            </span>
+        </a>
+
+        <div class="nav-links">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#features">Features</a>
+            <a href="/history">History</a>
+
+            <a href="/analyzer" class="nav-button">
+                Analyze Resume
+            </a>
+        </div>
+
+    </nav>
 
 
-        <form action="/analyze" method="POST" enctype="multipart/form-data">
+    <main>
 
-            <div class="form-group">
-                <label for="resume_file">Upload Resume (PDF or DOCX)</label>                
-                <input type="file" id="resume_file" name="resume_file" accept=".pdf,.docx">
+        <section class="hero">
+
+            <div class="hero-badge">
+                ✦ AI-Powered Resume Analysis
             </div>
 
-            <p style="font-size: 14px; color: #64748b;">
-                You can paste your resume text or upload a PDF or DOCX. File extraction is supported, but results may vary depending on how the resume is formatted.
+            <h1>
+                Stop guessing if your resume
+                <span>matches the job.</span>
+            </h1>
+
+            <p class="hero-description">
+                FitCheck uses semantic AI to compare your resume with
+                any job description and give you recruiter-style feedback,
+                strengths, growth areas, and a smarter match analysis.
             </p>
 
-            <div class="form-group">
-                <label for="resume_text">Paste Resume Text</label>
-                <textarea id="resume_text" name="resume_text" placeholder="Paste resume text here..."></textarea>
+            <div class="hero-actions">
+
+                <a href="/analyzer" class="primary-cta">
+                    ✦ Analyze My Resume
+                </a>
+
+                <a href="#how-it-works" class="secondary-cta">
+                    See How It Works
+                </a>
+
             </div>
 
-            <div class="form-group">
-                <label for="job_text">Paste Job Description</label>
-                <textarea id="job_text" name="job_text" placeholder="Paste job description here..." required></textarea>
+            <div class="hero-note">
+                PDF & DOCX support · Semantic AI · Instant feedback
             </div>
 
-            <button type="submit">Analyze Resume</button>
+        </section>
 
-        </form>
-    </div>
+
+        <section class="section soft-section" id="how-it-works">
+
+            <div class="section-heading">
+
+                <p class="section-label">HOW IT WORKS</p>
+
+                <h2>
+                    From resume to AI analysis in seconds
+                </h2>
+
+                <p>
+                    A simple process designed to help you understand
+                    how your experience aligns with a job.
+                </p>
+
+            </div>
+
+
+            <div class="steps-grid">
+
+                <article class="step-card">
+
+                    <div class="feature-icon">
+                        ↑
+                    </div>
+
+                    <span class="step-number">STEP 1</span>
+
+                    <h3>Upload your resume</h3>
+
+                    <p>
+                        Upload a PDF or DOCX resume, or paste your resume
+                        text directly into FitCheck.
+                    </p>
+
+                </article>
+
+
+                <article class="step-card">
+
+                    <div class="feature-icon">
+                        ✦
+                    </div>
+
+                    <span class="step-number">STEP 2</span>
+
+                    <h3>AI analyzes the match</h3>
+
+                    <p>
+                        Semantic AI compares the meaning of your experience
+                        against the real requirements of the job.
+                    </p>
+
+                </article>
+
+
+                <article class="step-card">
+
+                    <div class="feature-icon">
+                        ↗
+                    </div>
+
+                    <span class="step-number">STEP 3</span>
+
+                    <h3>Review your feedback</h3>
+
+                    <p>
+                        See your AI match, strongest areas, growth
+                        opportunities, and personalized career feedback.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <section class="section" id="features">
+
+            <div class="section-heading">
+
+                <p class="section-label">FEATURES</p>
+
+                <h2>
+                    More than a keyword checker
+                </h2>
+
+                <p>
+                    FitCheck combines NLP and semantic AI to provide
+                    a deeper look at resume and job alignment.
+                </p>
+
+            </div>
+
+
+            <div class="features-grid">
+
+                <article class="feature-card">
+
+                    <div class="small-feature-icon">◎</div>
+
+                    <div>
+                        <h3>Semantic AI Matching</h3>
+
+                        <p>
+                            Compare meaning and professional context,
+                            even when a resume uses different wording.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <div class="small-feature-icon">✦</div>
+
+                    <div>
+                        <h3>AI Career Assistant</h3>
+
+                        <p>
+                            Receive a natural-language assessment of
+                            your overall resume and job alignment.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <div class="small-feature-icon">✓</div>
+
+                    <div>
+                        <h3>AI Strength Ranking</h3>
+
+                        <p>
+                            Sentence embeddings rank the most relevant
+                            strengths based on the target position.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <div class="small-feature-icon">↗</div>
+
+                    <div>
+                        <h3>Growth Area Analysis</h3>
+
+                        <p>
+                            Identify relevant qualifications and concepts
+                            that are not clearly represented in your resume.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <div class="small-feature-icon">◫</div>
+
+                    <div>
+                        <h3>Analysis History</h3>
+
+                        <p>
+                            Save previous analyses and compare different
+                            versions of your resume over time.
+                        </p>
+                    </div>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <div class="small-feature-icon">↓</div>
+
+                    <div>
+                        <h3>CSV Export</h3>
+
+                        <p>
+                            Export your analysis history for personal
+                            tracking and comparison.
+                        </p>
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <section class="cta-section">
+
+            <p class="section-label light-label">
+                READY TO CHECK YOUR FIT?
+            </p>
+
+            <h2>
+                See your resume through an AI-powered lens.
+            </h2>
+
+            <p>
+                Upload your resume, paste the job description,
+                and get your analysis.
+            </p>
+
+            <a href="/analyzer" class="white-cta">
+                Analyze My Resume
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+
+        <div class="footer-brand">
+            FitCheck AI
+        </div>
+
+        <p>
+            Powered by Flask, spaCy, and Sentence Transformers.
+        </p>
+
+    </footer>
+
 </body>
 </html>

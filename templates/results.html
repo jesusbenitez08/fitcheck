@@ -6,73 +6,304 @@
     <title>FitCheck Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <div class="container">
-        <h1>FitCheck Results</h1>
+<body class="results-page">
 
-        <div class="score-card">
-            <h2>
-                Match Score:
-                 <span class="{% if match_score >= 70 %}good{% elif match_score >= 40 %}medium{% else %}bad{% endif %}">
-                 {{ match_score }}%
-                </span>
-            </h2>
-            <p class="match-label {% if match_score >= 70 %}good{% elif match_score >= 40 %}medium{% else %}bad{% endif %}">
-                 {{ match_label }}
-            </p>
+    <nav class="navbar">
+        <a href="/" class="brand">
+            <span class="brand-icon">F</span>
 
-            <p class="match-explanation">
-                {{ match_explanation }}
-            </p>
-            <p style="margin-top: 15px; font-size: 14px; color: #64748b;">
-                 Keyword Score: {{ keyword_score }}%
-             <br>
-                Semantic AI Score: {{ semantic_score }}%
-            </p>
+            <span>
+                FitCheck
+                <strong>AI</strong>
+            </span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/history">History</a>
+
+            <a href="/analyzer" class="nav-button">
+                New Analysis
+            </a>
         </div>
+    </nav>
 
-        <div class="results-grid">
-            <div class="card">
-                <h3>Matched Skills / Keywords</h3>
-                {% if matched_skills %}
-                    <div class="skills">
-                        {% for skill in matched_skills %}
-                            <span class="badge good">{{ skill }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p>No matched keywords found.</p>
-                {% endif %}
+
+    <main class="results-main">
+
+        <section class="results-hero">
+
+            <div class="results-heading-row">
+                <div>
+                    <p class="results-eyebrow">
+                        AI RESUME ANALYSIS
+                    </p>
+
+                    <h1>Your FitCheck Results</h1>
+                </div>
+
+                <a
+                    href="/analyzer"
+                    class="secondary-cta compact-cta"
+                >
+                    Analyze Another Resume
+                </a>
             </div>
 
-            <div class="card">
-                <h3>Missing Skills / Keywords</h3>
-                {% if missing_skills %}
-                    <div class="skills">
-                        {% for skill in missing_skills %}
-                            <span class="badge bad">{{ skill }}</span>
-                        {% endfor %}
+
+            <div class="match-hero">
+
+                <div class="score-visual">
+                    <div
+                        class="score-ring"
+                        style="--score: {{ match_score }};"
+                    >
+                        <div class="score-ring-inner">
+                            <strong>{{ match_score }}%</strong>
+                            <span>Overall Match</span>
+                        </div>
                     </div>
-                {% else %}
-                    <p>No missing keywords found.</p>
-                {% endif %}
+                </div>
+
+
+                <div class="match-overview">
+
+                    <span class="
+                        match-status
+                        {% if match_score >= 65 %}
+                            strong-status
+                        {% elif match_score >= 40 %}
+                            moderate-status
+                        {% else %}
+                            low-status
+                        {% endif %}
+                    ">
+                        {{ match_label }}
+                    </span>
+
+                    <h2>
+                        Your resume shows
+                        {% if match_score >= 65 %}
+                            strong alignment
+                        {% elif match_score >= 40 %}
+                            meaningful potential
+                        {% else %}
+                            limited alignment
+                        {% endif %}
+                        with this position.
+                    </h2>
+
+                    <p>
+                        {{ match_explanation }}
+                    </p>
+
+
+                    <div class="score-method">
+
+                        <div class="method-item">
+                            <span class="method-label">
+                                Exact overlap
+                            </span>
+
+                            <strong>{{ keyword_score }}%</strong>
+
+                            <small>
+                                Shared words and phrases
+                            </small>
+                        </div>
+
+                        <div class="method-divider"></div>
+
+                        <div class="method-item">
+                            <span class="method-label">
+                                Semantic alignment
+                            </span>
+
+                            <strong>{{ semantic_score }}%</strong>
+
+                            <small>
+                                Meaning-based AI comparison
+                            </small>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
-        </div>
 
-        <div class="card suggestions">
-            <h3>Suggestions</h3>
-            {% if suggestions %}
-                <ul>
-                    {% for suggestion in suggestions %}
-                        <li>{{ suggestion }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No suggestions needed.</p>
-            {% endif %}
-        </div>
+        </section>
 
-        <a class="button-link" href="/">Analyze Another Resume</a>
-    </div>
+
+        <section class="assistant-section">
+
+            <div class="assistant-header">
+
+                <div class="assistant-mark">
+                    <span>✓</span>
+                    <i>✦</i>
+                </div>
+
+                <div>
+                    <p class="results-eyebrow">
+                        PERSONALIZED FEEDBACK
+                    </p>
+
+                    <h2>AI Career Assistant</h2>
+                </div>
+
+            </div>
+
+
+            <div class="assistant-response">
+
+                <div class="assistant-line"></div>
+
+                <p>{{ ai_summary }}</p>
+
+            </div>
+
+        </section>
+
+
+        <section class="insights-section">
+
+            <div class="section-title-row">
+                <div>
+                    <p class="results-eyebrow">
+                        MATCH INSIGHTS
+                    </p>
+
+                    <h2>
+                        What stands out in your analysis
+                    </h2>
+                </div>
+            </div>
+
+
+            <div class="insights-grid">
+
+                <article class="insight-panel strengths-panel">
+
+                    <div class="insight-heading">
+
+                        <div class="insight-icon strength-icon">
+                            ✓
+                        </div>
+
+                        <div>
+                            <h3>AI Strengths</h3>
+
+                            <p>
+                                Relevant experience already reflected
+                                in your resume.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="insight-list">
+
+                        {% if matched_skills %}
+
+                            {% for skill in matched_skills %}
+
+                                <div class="insight-item strength-insight">
+                                    <span>✓</span>
+                                    {{ skill|title }}
+                                </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <p class="empty-insight">
+                                No clear strengths were identified
+                                from the current analysis.
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </article>
+
+
+                <article class="insight-panel growth-panel">
+
+                    <div class="insight-heading">
+
+                        <div class="insight-icon growth-icon">
+                            ↗
+                        </div>
+
+                        <div>
+                            <h3>Growth Areas</h3>
+
+                            <p>
+                                Important qualifications that could
+                                be represented more clearly.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="insight-list">
+
+                        {% if missing_skills %}
+
+                            {% for skill in missing_skills %}
+
+                                <div class="insight-item growth-insight">
+                                    <span>↗</span>
+                                    {{ skill|title }}
+                                </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <p class="empty-insight">
+                                No major growth areas were identified.
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <section class="results-footer-cta">
+
+            <div>
+                <h2>Ready to test another version?</h2>
+
+                <p>
+                    Adjust your resume and run another analysis
+                    to compare the results.
+                </p>
+            </div>
+
+            <div class="results-actions">
+                <a href="/history" class="secondary-cta">
+                    View History
+                </a>
+
+                <a href="/analyzer" class="primary-cta">
+                    New Analysis
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
 </body>
 </html>
