@@ -1,18 +1,43 @@
-from sentence_transformers import SentenceTransformer, util
 from flask import Flask, render_template, request
-import spacy
 import sqlite3
 from datetime import datetime
 from PyPDF2 import PdfReader
 from docx import Document
 import csv
-from flask import send_file
+
 
 
 app = Flask(__name__)
 DATABASE = "fitcheck_results.db"
-nlp = spacy.load("en_core_web_sm")
-semantic_model = SentenceTransformer("all-MiniLM-L6-v2")
+nlp = None
+semantic_model = None
+semantic_util = None
+
+
+def get_nlp_model():
+    global nlp
+
+    if nlp is None:
+        import spacy
+        nlp = spacy.load("en_core_web_sm")
+
+    return nlp
+
+
+def get_semantic_model():
+    global semantic_model, semantic_util
+
+    if semantic_model is None:
+        from sentence_transformers import SentenceTransformer, util
+
+        semantic_model = SentenceTransformer(
+            "all-MiniLM-L6-v2",
+            device="cpu"
+        )
+
+        semantic_util = util
+
+    return semantic_model, semantic_util
 
 STOP_WORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
@@ -80,7 +105,9 @@ SKILL_CATEGORIES = {
 
 def extract_keywords(text: str):
     text_lower = text.lower()
-    doc = nlp(text_lower)
+
+    nlp_model = get_nlp_model()
+    doc = nlp_model(text_lower)
 
     keywords = set()
 
@@ -175,14 +202,29 @@ def calculate_match_score(common_words, job_words):
 
     return min(final_score, 100)
 
+
 def calculate_semantic_similarity(resume_text: str, job_text: str):
     if len(resume_text.strip()) < 10 or len(job_text.strip()) < 10:
         return 0
 
-    resume_embedding = semantic_model.encode(resume_text, convert_to_tensor=True)
-    job_embedding = semantic_model.encode(job_text, convert_to_tensor=True)
+    model, model_util = get_semantic_model()
 
-    similarity = util.cos_sim(resume_embedding, job_embedding).item()
+    resume_embedding = model.encode(
+        resume_text,
+        convert_to_tensor=True,
+        show_progress_bar=False
+    )
+
+    job_embedding = model.encode(
+        job_text,
+        convert_to_tensor=True,
+        show_progress_bar=False
+    )
+
+    similarity = model_util.cos_sim(
+        resume_embedding,
+        job_embedding
+    ).item()
 
     return int(similarity * 100)
 
@@ -323,6 +365,7 @@ def init_db():
     conn.commit()
     conn.close()
 
+init_db()
 
 def save_analysis_result(resume_name, results):
     conn = sqlite3.connect(DATABASE)
@@ -463,11 +506,14 @@ def rank_skills_by_relevance(skills, comparison_text, top_n=8):
     if not skills or len(comparison_text.strip()) < 10:
         return []
 
+    model, model_util = get_semantic_model()
+
     skill_list = merge_similar_skills(skills)
 
-    comparison_embedding = semantic_model.encode(
+    comparison_embedding = model.encode(
         comparison_text,
-        convert_to_tensor=True
+        convert_to_tensor=True,
+        show_progress_bar=False
     )
 
     ranked_skills = []
@@ -483,12 +529,16 @@ def rank_skills_by_relevance(skills, comparison_text, top_n=8):
         if len(skill.split()) > 5:
             continue
 
-        skill_embedding = semantic_model.encode(
+        skill_embedding = model.encode(
             skill,
-            convert_to_tensor=True
+            convert_to_tensor=True,
+            show_progress_bar=False
         )
 
-        similarity = util.cos_sim(skill_embedding, comparison_embedding).item()
+        similarity = model_util.cos_sim(
+            skill_embedding,
+            comparison_embedding
+        ).item()
 
         ranked_skills.append((skill, similarity))
 
@@ -712,8 +762,6 @@ def get_analysis_history():
 
 
 if __name__ == '__main__':
-    init_db()
-
     app.run(
         host="0.0.0.0",
         port=5000,
